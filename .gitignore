@@ -1,3 +1,7 @@
 /packages.riot.im/debian/dists
 /packages.riot.im/debian/pool
-/packages.riot.im/desktop
+/packages.riot.im/desktop/install
+/packages.riot.im/desktop/update/win32
+/packages.riot.im/desktop/update/macos/*.zip
+/packages.riot.im/desktop/update/macos/latest
+
