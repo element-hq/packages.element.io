@@ -11,7 +11,7 @@ header("Pragma: no-cache");
 
 $latest = trim(file_get_contents("latest"));
 
-if (!preg_match('/Riot\/([a-z0-9\-\.]+) .*/', $_SERVER['HTTP_USER_AGENT'], $matches)) {
+if (!preg_match('/([a-z0-9\-\.]+)/', $_GET['localVersion'], $matches)) {
     http_response_code(400);
     echo "Unable to detect current version\n";
     exit;
@@ -25,5 +25,5 @@ if (Comparator::greaterThanOrEqualTo($version, $latest)) {
 }
 ?>
 {
-    "url": "https://packages.riot.im/desktop/update/macos/Riot-<?php echo $latest; ?>-mac.zip"
+    "url": "https://packages.element.io/desktop/update/macos/Element-<?php echo $latest; ?>-universal-mac.zip"
 }
