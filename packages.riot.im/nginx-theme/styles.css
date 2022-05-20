@@ -5,8 +5,7 @@
  * hosted on GitHub, https://GitHub.com/Naereen/Nginx-Fancyindex-Theme
  */
 
-
-@import url('/nginx-theme/fonts/inter.css');
+@import url('./fonts/inter.css');
 
 * { font-family: 'Inter', sans-serif; }
 @supports (font-variation-settings: normal) {
