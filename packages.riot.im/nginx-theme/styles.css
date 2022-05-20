@@ -31,8 +31,7 @@ html {
 body {
     background-color: #F4F6FA;
     margin: 0 auto;
-    padding: 20px;
-    padding-top: 100px;
+    padding: 100px 20px 20px;
     max-width: 800px;
 }
 
@@ -73,20 +72,14 @@ a {
     }
 
 input {
-    margin: 0 auto;
-    font-size: 100%;
     vertical-align: middle;
     *overflow: visible;
-    line-height: normal;
     font-family: 'Open Sans', sans-serif;
-    font-size: 12px;
     font-weight: 300;
-    line-height: 18px;
-    color: #555;
     display: inline-block;
     height: 20px;
     padding: 4px 32px 4px 6px;
-    margin-bottom: 9px;
+    margin: 0 auto 9px;
     font-size: 14px;
     line-height: 20px;
     color: #555;
@@ -185,8 +178,8 @@ td {
  top: 0;
  width: 100%;
  z-index: 3;
- padding-left: 0px;
- padding-right: 0px;
+ padding-left: 0;
+ padding-right: 0;
 }
 
 .nav ul {
