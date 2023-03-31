@@ -12,7 +12,7 @@ on:
             - completed
     # Remote API trigger for non-deb packages to hit
     repository_dispatch:
-        types: [reprepro-incoming]
+        types: [packages-index]
     # Manual trigger
     workflow_dispatch: {}
 jobs:
