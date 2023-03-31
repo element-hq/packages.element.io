@@ -1,8 +1,5 @@
 # don't delete old debs by default
 keepunreferencedfiles
 
-# do prompt for a passphrase when signing
-ask-passphrase
-
 # output dir
-outdir +b/../packages.riot.im/debian
+outdir +b/../packages.element.io/debian
