@@ -12,5 +12,6 @@
 /packages.element.io/nightly/update/macos/latest
 /packages.element.io/nightly/update/macos/arm64
 /packages.element.io/nightly/update/macos/x64
+/node_modules
 /.idea
 
