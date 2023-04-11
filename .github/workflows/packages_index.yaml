@@ -15,6 +15,7 @@ on:
         types: [packages-index]
     # Manual trigger
     workflow_dispatch: {}
+concurrency: ${{ github.workflow }}
 jobs:
     deploy:
         name: "Deploy"
