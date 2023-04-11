@@ -19,7 +19,7 @@ jobs:
         runs-on: ubuntu-latest
         env:
             R2_INCOMING_BUCKET: ${{ vars.R2_INCOMING_BUCKET }}
-            R2_URL: ${{ secrets.CF_R2_S3_API }}
+            R2_URL: ${{ vars.CF_R2_S3_API }}
         steps:
             - uses: actions/checkout@v3
 
