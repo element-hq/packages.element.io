@@ -15,8 +15,6 @@ on:
                 required: false
             CF_R2_TOKEN:
                 required: false
-            CF_R2_S3_API:
-                required: false
     repository_dispatch:
         types: [reprepro-incoming]
     workflow_dispatch:
@@ -36,7 +34,7 @@ jobs:
             R2_BUCKET: ${{ vars.R2_BUCKET }}
             R2_DB_BUCKET: ${{ vars.R2_DB_BUCKET }}
             R2_INCOMING_BUCKET: ${{ vars.R2_INCOMING_BUCKET }}
-            R2_URL: ${{ secrets.CF_R2_S3_API }}
+            R2_URL: ${{ vars.CF_R2_S3_API }}
             INCOMING_FILE: ${{ inputs.incoming || github.event.client_payload.incoming }}
         steps:
             - uses: actions/checkout@v3
