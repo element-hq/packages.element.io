@@ -69,17 +69,20 @@ jobs:
                       reprepro -b debian includedeb "$target" "$INCOMING_FILE"
                   done
 
+            - name: Host repository for testing
+              uses: Eun/http-server-action@856e467dda36cd5d30e93bd7dd168cf3e1676301 # v1
+              with:
+                  directory: packages.element.io
+                  port: 8000
+
             - name: Check repository works
               run: |
                   # Copy signing keyring
                   sudo cp packages.element.io/debian/element-io-archive-keyring.gpg /usr/share/keyrings/element-io-archive-keyring.gpg
                   # Point apt at local apt repo
-                  echo "deb [signed-by=/usr/share/keyrings/element-io-archive-keyring.gpg] http://127.0.0.1:8000/debian/ default main" | sudo tee /etc/apt/sources.list.d/element-io.list
+                  echo "deb [signed-by=/usr/share/keyrings/element-io-archive-keyring.gpg] http://localhost:8000/debian/ default main" | sudo tee /etc/apt/sources.list.d/element-io.list
 
-                  # Start http server and fetch from it via apt
-                  python3 -m http.server 8000 --bind 127.0.0.1 &
                   sudo apt-get update --allow-insecure-repositories
-                  killall python3
 
                   # Validate the package in the repo quacks like the one we expect
                   info=$(dpkg --info ../dist/*.deb)
