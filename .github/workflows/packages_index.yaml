@@ -24,7 +24,7 @@ jobs:
         environment: packages.element.io
         env:
             R2_BUCKET: ${{ vars.R2_BUCKET }}
-            R2_URL: ${{ secrets.CF_R2_S3_API }}
+            R2_URL: ${{ vars.CF_R2_S3_API }}
         steps:
             - uses: actions/checkout@v3
 
@@ -45,6 +45,6 @@ jobs:
             - name: Generate directory indexes
               run: scripts/generate-packages-index.ts
               env:
-                  CF_R2_S3_API: ${{ secrets.CF_R2_S3_API }}
+                  CF_R2_S3_API: ${{ vars.CF_R2_S3_API }}
                   CF_R2_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
                   CF_R2_TOKEN: ${{ secrets.CF_R2_TOKEN }}
