@@ -1,0 +1,56 @@
+name: Build Keyring package
+on:
+    workflow_dispatch:
+        inputs:
+            deploy:
+                description: Deploy artifacts
+                required: true
+                type: boolean
+                default: true
+            fingerprint:
+                description: The expected gpg fingerprint
+                required: true
+                type: string
+concurrency: ${{ github.workflow }}
+jobs:
+    build:
+        name: Build Keyring package
+        environment: packages.element.io
+        runs-on: ubuntu-latest
+        env:
+            R2_INCOMING_BUCKET: ${{ vars.R2_INCOMING_BUCKET }}
+            R2_URL: ${{ vars.CF_R2_S3_API }}
+        steps:
+            - uses: actions/checkout@v3
+
+            - name: Prepare
+              run: |
+                  mkdir -p element-io-archive-keyring/usr/share/keyrings/
+                  cp packages.element.io/debian/element-io-archive-keyring.gpg element-io-archive-keyring/usr/share/keyrings/element-io-archive-keyring.gpg
+
+            - name: Check fingerprint
+              run: |
+                  gpg --import element-io-archive-keyring/usr/share/keyrings/element-io-archive-keyring.gpg
+                  gpg --fingerprint "$FINGERPRINT"
+              env:
+                  FINGERPRINT: ${{ inputs.fingerprint }}
+
+            - name: Build deb package
+              run: |
+                  chmod u=rw,go=r element-io-archive-keyring/usr/share/keyrings/element-io-archive-keyring.gpg
+                  dpkg-deb -Zxz --root-owner-group --build element-io-archive-keyring element-io-archive-keyring.deb
+
+            - name: Upload incoming deb
+              run: aws s3 cp element-io-archive-keyring.deb "s3://$R2_INCOMING_BUCKET" --endpoint-url "$R2_URL" --region auto
+              env:
+                  AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
+
+    reprepro:
+        needs: build
+        name: Run reprepro
+        if: inputs.deploy
+        uses: ./.github/workflows/reprepro.yaml
+        secrets: inherit
+        with:
+            incoming: element-io-archive-keyring.deb
