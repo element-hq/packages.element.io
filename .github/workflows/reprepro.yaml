@@ -66,7 +66,7 @@ jobs:
             - name: Run reprepro
               run: |
                   grep Codename debian/conf/distributions | sed -n 's/Codename: //p' | while read -r target ; do
-                      reprepro -b debian includedeb "$target" "$INCOMING_FILE"
+                      reprepro -b debian includedeb "$target" "dist/$INCOMING_FILE"
                   done
 
             - name: Host repository for testing
