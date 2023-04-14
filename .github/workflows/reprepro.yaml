@@ -40,7 +40,9 @@ jobs:
             - uses: actions/checkout@v3
 
             - name: Fetch deb
-              run: aws s3 cp --recursive "s3://$R2_INCOMING_BUCKET/$INCOMING_FILE" . --endpoint-url $R2_URL --region auto
+              run: |
+                  mkdir dist
+                  aws s3 cp --recursive "s3://$R2_INCOMING_BUCKET/$INCOMING_FILE" dist/ --endpoint-url $R2_URL --region auto
               env:
                   AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
@@ -83,7 +85,7 @@ jobs:
                   sudo apt-get update --allow-insecure-repositories
 
                   # Validate the package in the repo quacks like the one we expect
-                  info=$(dpkg --info ../dist/*.deb)
+                  info=$(dpkg --info ../dist/$INCOMING_FILE)
                   package=$(echo "$info" | grep "Package:" | sed -n 's/ Package: //p')
                   version=$(echo "$info" | grep "Version:" | sed -n 's/ Version: //p')
                   apt-cache show "$package" | grep "Version: $version"
