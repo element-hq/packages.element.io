@@ -78,7 +78,7 @@ jobs:
             - name: Check repository works
               run: |
                   # Copy signing keyring
-                  sudo cp packages.element.io/debian/element-io-archive-keyring.gpg /usr/share/keyrings/element-io-archive-keyring.gpg
+                  sudo cp debian/element-io-archive-keyring.gpg /usr/share/keyrings/element-io-archive-keyring.gpg
                   # Point apt at local apt repo
                   echo "deb [signed-by=/usr/share/keyrings/element-io-archive-keyring.gpg] http://localhost:8000/debian/ default main" | sudo tee /etc/apt/sources.list.d/element-io.list
 
