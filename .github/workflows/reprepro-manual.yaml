@@ -1,0 +1,69 @@
+name: Manual Reprepro
+on:
+    workflow_dispatch:
+        inputs:
+            command:
+                description: The command to run, excluding `reprepro -b debian`
+                required: true
+                type: string
+            deploy:
+                description: Whether to deploy changes back
+                required: false
+                type: boolean
+                default: true
+# Protect reprepro database using concurrency
+concurrency: reprepro
+jobs:
+    reprepro:
+        name: Run reprepro
+        environment: packages.element.io
+        runs-on: ubuntu-latest
+        env:
+            R2_BUCKET: ${{ vars.R2_BUCKET }}
+            R2_DB_BUCKET: ${{ vars.R2_DB_BUCKET }}
+            R2_URL: ${{ vars.CF_R2_S3_API }}
+        steps:
+            - uses: actions/checkout@v3
+
+            - name: Load GPG key
+              uses: crazy-max/ghaction-import-gpg@111c56156bcc6918c056dbef52164cfa583dc549 # v5
+              with:
+                  gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+                  passphrase: ${{ secrets.GPG_PASSPHRASE }}
+                  fingerprint: ${{ vars.GPG_FINGERPRINT }}
+
+            - name: Install reprepro
+              run: sudo apt-get install -y reprepro
+
+            - name: Fetch database
+              run: aws s3 cp --recursive "s3://$R2_DB_BUCKET" debian/db/ --endpoint-url "$R2_URL" --region auto
+              env:
+                  AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
+
+            - name: Run reprepro
+              run: |
+                  reprepro -b debian ${{ inputs.command }}
+
+            - name: Deploy debian repo
+              if: inputs.deploy
+              run: |
+                  aws s3 cp --recursive packages.element.io/debian/ "s3://$R2_BUCKET/debian" --endpoint-url "$R2_URL" --region auto
+              env:
+                  AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
+
+            - name: Store database
+              if: inputs.deploy
+              run: aws s3 cp --recursive debian/db/ "s3://$R2_DB_BUCKET" --endpoint-url "$R2_URL" --region auto
+              env:
+                  AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
+
+            - uses: actions/upload-artifact@v3
+              if: !inputs.deploy
+              with:
+                  name: packages.element.io
+                  path: |
+                      packages.element.io
+                      debian
