@@ -21,7 +21,6 @@ jobs:
         env:
             R2_BUCKET: ${{ vars.R2_BUCKET }}
             R2_DB_BUCKET: ${{ vars.R2_DB_BUCKET }}
-            R2_INCOMING_BUCKET: ${{ vars.R2_INCOMING_BUCKET }}
             R2_URL: ${{ vars.CF_R2_S3_API }}
         steps:
             - uses: actions/checkout@v3
