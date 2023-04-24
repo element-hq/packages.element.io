@@ -1,6 +1,6 @@
 Origin: riot.im
 Codename: default
-Architectures: amd64 source
+Architectures: amd64 arm64 source
 Components: main
 SignWith: D7B0B66941D01538
 Tracking: minimal
