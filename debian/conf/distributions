@@ -1,6 +1,6 @@
 Origin: riot.im
 Codename: default
-Architectures: amd64 i386 source
+Architectures: amd64 source
 Components: main
 SignWith: D7B0B66941D01538
 Tracking: minimal
@@ -8,7 +8,7 @@ Tracking: minimal
 Origin: riot.im
 Suite: oldoldstable
 Codename: jessie
-Architectures: amd64 i386 source
+Architectures: amd64 source
 Components: main
 SignWith: D7B0B66941D01538
 Tracking: minimal
@@ -16,7 +16,7 @@ Tracking: minimal
 Origin: riot.im
 Suite: oldstable
 Codename: stretch
-Architectures: amd64 i386 source
+Architectures: amd64 source
 Components: main
 SignWith: D7B0B66941D01538
 Tracking: minimal
@@ -24,7 +24,7 @@ Tracking: minimal
 Origin: riot.im
 Suite: testing
 Codename: bullseye
-Architectures: amd64 i386 source
+Architectures: amd64 source
 Components: main
 SignWith: D7B0B66941D01538
 Tracking: minimal
@@ -32,21 +32,21 @@ Tracking: minimal
 Origin: riot.im
 Suite: unstable
 Codename: sid
-Architectures: amd64 i386 source
+Architectures: amd64 source
 Components: main
 SignWith: D7B0B66941D01538
 Tracking: minimal
 
 Origin: riot.im
 Codename: xenial
-Architectures: amd64 i386 source
+Architectures: amd64 source
 Components: main
 SignWith: D7B0B66941D01538
 Tracking: minimal
 
 Origin: riot.im
 Codename: bionic
-Architectures: amd64 i386 source
+Architectures: amd64 source
 Components: main
 SignWith: D7B0B66941D01538
 Tracking: minimal
