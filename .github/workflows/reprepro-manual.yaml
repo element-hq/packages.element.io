@@ -61,7 +61,7 @@ jobs:
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
 
             - uses: actions/upload-artifact@v3
-              if: !inputs.deploy
+              if: inputs.deploy == false
               with:
                   name: packages.element.io
                   path: |
