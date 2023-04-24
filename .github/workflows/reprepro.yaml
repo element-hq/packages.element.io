@@ -73,7 +73,7 @@ jobs:
             - name: Run reprepro default
               if: contains(env.INCOMING_FILE, 'arm64')
               run: |
-                  reprepro -b debian includedeb "$target" "dist/$INCOMING_FILE"
+                  reprepro -b debian includedeb default "dist/$INCOMING_FILE"
 
             - name: Host repository for testing
               uses: Eun/http-server-action@856e467dda36cd5d30e93bd7dd168cf3e1676301 # v1
