@@ -63,17 +63,18 @@ jobs:
                   AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
 
-            - name: Run reprepro all
-              if: contains(env.INCOMING_FILE, 'amd64')
+            - name: Run reprepro
               run: |
-                  grep Codename debian/conf/distributions | sed -n 's/Codename: //p' | while read -r target ; do
+                  # Find all configured suites which can accept a deb for this architecture, "all" can match all non-source
+                  ARCH=$(dpkg --info "dist/$INCOMING_FILE" | awk '/Architecture/ {print $2}')
+                  DISTROS=$(reprepro -b debian _listconfidentifiers | grep -v source)
+                  if [[ "ARCH" != "all" ]]; then
+                      DISTROS=$(echo "$DISTROS" | grep "$ARCH")
+                  fi
+                  
+                  echo "$DISTROS" | awk -F "|" '{print $1}' | uniq | while read -r target ; do
                       reprepro -b debian includedeb "$target" "dist/$INCOMING_FILE"
                   done
-
-            - name: Run reprepro default
-              if: contains(env.INCOMING_FILE, 'arm64')
-              run: |
-                  reprepro -b debian includedeb "$target" "dist/$INCOMING_FILE"
 
             - name: Host repository for testing
               uses: Eun/http-server-action@856e467dda36cd5d30e93bd7dd168cf3e1676301 # v1
