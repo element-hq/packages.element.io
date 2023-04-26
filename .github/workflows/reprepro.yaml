@@ -64,9 +64,12 @@ jobs:
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
 
             - name: Run reprepro
+              id: reprepro
               run: |
                   # Find all configured suites which can accept a deb for this architecture, "all" can match all non-source
                   ARCH=$(dpkg --info "dist/$INCOMING_FILE" | awk '/Architecture/ {print $2}')
+                  echo "arch=$ARCH" >> $GITHUB_OUTPUT
+
                   DISTROS=$(reprepro -b debian _listconfidentifiers | grep -v source)
                   if [[ "ARCH" != "all" ]]; then
                       DISTROS=$(echo "$DISTROS" | grep "$ARCH")
@@ -84,6 +87,9 @@ jobs:
 
             - name: Check repository works
               run: |
+                  # Add architecture so apt will download for it
+                  dpkg --add-architecture $ARCH
+              
                   # Copy signing keyring
                   sudo cp debian/element-io-archive-keyring.gpg /usr/share/keyrings/element-io-archive-keyring.gpg
                   # Point apt at local apt repo
@@ -97,6 +103,8 @@ jobs:
                   version=$(echo "$info" | grep "Version:" | sed -n 's/ Version: //p')
                   apt-cache show "$package" | grep "Version: $version"
               working-directory: ./packages.element.io
+              env:
+                  ARCH: ${{ steps.reprepro.outputs.arch }}
 
             - name: Deploy debian repo
               run: |
