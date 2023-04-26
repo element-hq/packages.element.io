@@ -65,7 +65,14 @@ jobs:
 
             - name: Run reprepro
               run: |
-                  grep Codename debian/conf/distributions | sed -n 's/Codename: //p' | while read -r target ; do
+                  # Find all configured suites which can accept a deb for this architecture, "all" can match all non-source
+                  ARCH=$(dpkg --info "dist/$INCOMING_FILE" | awk '/Architecture/ {print $2}')
+                  DISTROS=$(reprepro -b debian _listconfidentifiers | grep -v source)
+                  if [[ "ARCH" != "all" ]]; then
+                      DISTROS=$(echo "$DISTROS" | grep "$ARCH")
+                  fi
+                  
+                  echo "$DISTROS" | awk -F "|" '{print $1}' | uniq | while read -r target ; do
                       reprepro -b debian includedeb "$target" "dist/$INCOMING_FILE"
                   done
 
