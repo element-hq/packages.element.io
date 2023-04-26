@@ -92,8 +92,8 @@ jobs:
               
                   # Copy signing keyring
                   sudo cp debian/element-io-archive-keyring.gpg /usr/share/keyrings/element-io-archive-keyring.gpg
-                  # Point apt at local apt repo
-                  echo "deb [signed-by=/usr/share/keyrings/element-io-archive-keyring.gpg] http://localhost:8000/debian/ default main" | sudo tee /etc/apt/sources.list.d/element-io.list
+                  # Point apt at local apt repo overwriting all default sources
+                  echo "deb [signed-by=/usr/share/keyrings/element-io-archive-keyring.gpg] http://localhost:8000/debian/ default main" | sudo tee /etc/apt/sources.list
 
                   sudo apt-get update --allow-insecure-repositories
 
