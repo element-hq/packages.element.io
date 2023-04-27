@@ -66,6 +66,7 @@ jobs:
             - name: Run reprepro
               id: reprepro
               run: |
+                  set +x
                   # Find all configured suites which can accept a deb for this architecture, "all" can match all non-source
                   ARCH=$(dpkg --info "dist/$INCOMING_FILE" | awk '/Architecture/ {print $2}')
                   echo "arch=$ARCH" >> $GITHUB_OUTPUT
@@ -87,6 +88,7 @@ jobs:
 
             - name: Check repository works
               run: |
+                  set +x
                   # Add architecture so apt will download for it
                   sudo dpkg --add-architecture $ARCH || exit 0
               
