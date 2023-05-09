@@ -103,7 +103,7 @@ jobs:
                   info=$(dpkg --info ../dist/$INCOMING_FILE)
                   package=$(echo "$info" | grep "Package:" | sed -n 's/ Package: //p')
                   version=$(echo "$info" | grep "Version:" | sed -n 's/ Version: //p')
-                  apt-cache show "$package" | grep "Version: $version"
+                  apt-cache show "$package" -o=APT::Architecture="$ARCH" | grep "Version: $version"
               working-directory: ./packages.element.io
               env:
                   ARCH: ${{ steps.reprepro.outputs.arch }}
