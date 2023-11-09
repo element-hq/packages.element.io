@@ -1,0 +1,41 @@
+name: Deploy packages.element.io deb
+description: Deploys given deb to packages.element.io reprepro repository
+inputs:
+    file:
+        description: Name of incoming deb file
+        required: true
+    github-token:
+        description: GitHub token
+        required: true
+    bucket-api:
+        description: S3 API endpoint
+        required: true
+    bucket-key-id:
+        description: S3 access key ID
+        required: true
+    bucket-access-key:
+        description: S3 access key
+        required: true
+runs:
+    using: composite
+    steps:
+        - name: Upload incoming deb
+          id: upload
+          shell: bash
+          run: |
+              echo "incoming=$(basename $FILE)" >> $GITHUB_OUTPUT
+              aws s3 cp "$FILE" "s3://$R2_INCOMING_BUCKET" --endpoint-url "$R2_URL" --region auto
+          env:
+              FILE: ${{ inputs.file }}
+              R2_URL: ${{ inputs.bucket-api }}
+              R2_INCOMING_BUCKET: packages-element-io-incoming
+              AWS_ACCESS_KEY_ID: ${{ inputs.bucket-key-id }}
+              AWS_SECRET_ACCESS_KEY: ${{ inputs.bucket-access-key }}
+
+        - name: Notify packages.element.io of incoming deb
+          uses: peter-evans/repository-dispatch@bf47d102fdb849e755b0b0023ea3e81a44b6f570 # v2
+          with:
+              token: ${{ inputs.github-token }}
+              repository: vector-im/packages.element.io
+              event-type: reprepro-incoming
+              client-payload: '{"incoming": "${{ steps.upload.outputs.incoming }}"}'
