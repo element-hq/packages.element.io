@@ -72,7 +72,7 @@ jobs:
                   echo "arch=$ARCH" >> $GITHUB_OUTPUT
 
                   DISTROS=$(reprepro -b debian _listconfidentifiers | grep -v source)
-                  if [[ "ARCH" != "all" ]]; then
+                  if [[ "$ARCH" != "all" ]]; then
                       DISTROS=$(echo "$DISTROS" | grep "$ARCH")
                   fi
                   
