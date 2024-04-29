@@ -167,6 +167,7 @@ async function generateIndex(Prefix: string): Promise<{
 
     let files: _Object[] = [];
     let dirs: string[] = [];
+    let page = 0;
     let continuationToken: string | undefined;
     do {
         const command = new ListObjectsV2Command({
@@ -181,9 +182,12 @@ async function generateIndex(Prefix: string): Promise<{
         dirs = dirs.concat((listResponse.CommonPrefixes?.map((p) => p.Prefix?.slice(Prefix.length).split("/", 2)[0]).filter(
             Boolean,
         ) as string[]) ?? []);
+        page++;
     } while (continuationToken);
 
-    const Body = indexLayout(Prefix, files, dirs);
+    console.info(`Got ${files.length} files and ${dirs.length} directories over ${page} pages`);
+    // Reverse files to have latest at the top
+    const Body = indexLayout(Prefix, files.reverse(), dirs);
 
     await client.send(
         new PutObjectCommand({
