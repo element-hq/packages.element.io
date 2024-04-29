@@ -164,19 +164,25 @@ async function generateIndex(Prefix: string): Promise<{
     dirs: string[];
 }> {
     console.info(`Generating index for prefix '${Prefix}'`);
-    const command = new ListObjectsV2Command({
-        Bucket,
-        Delimiter: "/",
-        Prefix,
-        MaxKeys: 1000,
-    });
 
-    const listResponse = await client.send(command);
-    const files = listResponse.Contents ?? [];
-    const dirs =
-        (listResponse.CommonPrefixes?.map((p) => p.Prefix?.slice(Prefix.length).split("/", 2)[0]).filter(
+    let files: _Object[] = [];
+    let dirs: string[] = [];
+    let continuationToken: string | undefined;
+    do {
+        const command = new ListObjectsV2Command({
+            Bucket,
+            Delimiter: "/",
+            Prefix,
+            MaxKeys: 1000,
+            ContinuationToken: continuationToken
+        });
+        const listResponse = await client.send(command);
+        files = files.concat(listResponse.Contents ?? []);
+        dirs = dirs.concat((listResponse.CommonPrefixes?.map((p) => p.Prefix?.slice(Prefix.length).split("/", 2)[0]).filter(
             Boolean,
-        ) as string[]) ?? [];
+        ) as string[]) ?? []);
+    } while (continuationToken);
+
     const Body = indexLayout(Prefix, files, dirs);
 
     await client.send(
