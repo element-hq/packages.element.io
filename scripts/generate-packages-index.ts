@@ -168,6 +168,7 @@ async function generateIndex(Prefix: string): Promise<{
         Bucket,
         Delimiter: "/",
         Prefix,
+        MaxKeys: 1000,
     });
 
     const listResponse = await client.send(command);
