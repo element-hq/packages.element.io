@@ -183,6 +183,7 @@ async function generateIndex(Prefix: string): Promise<{
             Boolean,
         ) as string[]) ?? []);
         page++;
+        continuationToken = listResponse.NextContinuationToken;
     } while (continuationToken);
 
     console.info(`Got ${files.length} files and ${dirs.length} directories over ${page} pages`);
