@@ -187,8 +187,9 @@ async function generateIndex(Prefix: string): Promise<{
     } while (continuationToken);
 
     console.info(`Got ${files.length} files and ${dirs.length} directories over ${page} pages`);
-    // Reverse files to have latest at the top
-    const Body = indexLayout(Prefix, files.reverse(), dirs);
+    files.sort((a, b) => b.LastModified!.getTime() - a.LastModified!.getTime());
+
+    const Body = indexLayout(Prefix, files, dirs);
 
     await client.send(
         new PutObjectCommand({
