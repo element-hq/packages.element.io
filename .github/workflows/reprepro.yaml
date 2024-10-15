@@ -29,7 +29,7 @@ jobs:
     reprepro:
         name: Deploy debian package
         environment: packages.element.io
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-22.04
         env:
             R2_BUCKET: ${{ vars.R2_BUCKET }}
             R2_DB_BUCKET: ${{ vars.R2_DB_BUCKET }}
