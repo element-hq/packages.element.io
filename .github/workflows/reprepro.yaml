@@ -97,7 +97,7 @@ jobs:
                   # Point apt at local apt repo overwriting all default sources
                   echo "deb [signed-by=/usr/share/keyrings/element-io-archive-keyring.gpg] http://localhost:8000/debian/ default main" | sudo tee /etc/apt/sources.list
                   # Later ubuntu versions use the `conf.d` approach so we need to remove the default sources
-                  rm -R /etc/apt/sources.list.d/*
+                  sudo rm -R /etc/apt/sources.list.d/*
 
                   sudo apt-get update --allow-insecure-repositories
 
