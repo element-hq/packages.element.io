@@ -39,6 +39,13 @@ jobs:
         steps:
             - uses: actions/checkout@v3
 
+            # Workaround for https://www.cloudflarestatus.com/incidents/t5nrjmpxc1cj
+            - uses: unfor19/install-aws-cli-action@e8b481e524a99f37fbd39fdc1dcb3341ab091367 # v1
+              with:
+                  version: 2.22.35
+                  verbose: false
+                  arch: amd64
+
             - name: Fetch deb
               run: |
                   mkdir dist
