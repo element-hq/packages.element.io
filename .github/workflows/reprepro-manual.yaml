@@ -35,6 +35,13 @@ jobs:
             - name: Install reprepro
               run: sudo apt-get install -y reprepro
 
+            # Workaround for https://www.cloudflarestatus.com/incidents/t5nrjmpxc1cj
+            - uses: unfor19/install-aws-cli-action@e8b481e524a99f37fbd39fdc1dcb3341ab091367 # v1
+              with:
+                  version: 2.22.35
+                  verbose: false
+                  arch: amd64
+
             - name: Fetch database
               run: aws s3 cp --recursive "s3://$R2_DB_BUCKET" debian/db/ --endpoint-url "$R2_URL" --region auto
               env:
