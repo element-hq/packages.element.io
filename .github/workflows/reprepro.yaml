@@ -46,13 +46,6 @@ jobs:
                   verbose: false
                   arch: amd64
 
-            - name: Fetch deb (url)
-              if: startsWith(env.INCOMING_FILE, 'https://') == true
-              run: |
-                  mkdir dist
-                  wget -O dist/incoming.deb "$INCOMING_FILE"
-                  echo "INCOMING_FILE=incoming.deb" >> $GITHUB_ENV
-
             - name: Fetch deb (r2)
               if: startsWith(env.INCOMING_FILE, 'https://') == false
               run: |
@@ -61,6 +54,13 @@ jobs:
               env:
                   AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
+
+            - name: Fetch deb (url)
+              if: startsWith(env.INCOMING_FILE, 'https://') == true
+              run: |
+                  mkdir dist
+                  wget -O dist/incoming.deb "$INCOMING_FILE"
+                  echo "INCOMING_FILE=incoming.deb" >> $GITHUB_ENV
 
             - name: Load GPG key
               uses: crazy-max/ghaction-import-gpg@111c56156bcc6918c056dbef52164cfa583dc549 # v5
