@@ -5,7 +5,7 @@ on:
             incoming:
                 type: string
                 required: true
-                description: Name of incoming deb file
+                description: Name or URL of incoming deb file
         secrets:
             GPG_PRIVATE_KEY:
                 required: false
@@ -46,7 +46,15 @@ jobs:
                   verbose: false
                   arch: amd64
 
-            - name: Fetch deb
+            - name: Fetch deb (url)
+              if: startsWith(env.INCOMING_FILE, 'https://') == true
+              run: |
+                  mkdir dist
+                  wget -O dist/incoming.deb "$INCOMING_FILE"
+                  echo "INCOMING_FILE=incoming.deb" >> $GITHUB_ENV
+
+            - name: Fetch deb (r2)
+              if: startsWith(env.INCOMING_FILE, 'https://') == false
               run: |
                   mkdir dist
                   aws s3 cp "s3://$R2_INCOMING_BUCKET/$INCOMING_FILE" dist/ --endpoint-url $R2_URL --region auto
