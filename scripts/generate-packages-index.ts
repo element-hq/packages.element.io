@@ -28,6 +28,8 @@ const client = new S3Client({
         accessKeyId: process.env.CF_R2_ACCESS_KEY_ID,
         secretAccessKey: process.env.CF_R2_TOKEN,
     },
+    requestChecksumCalculation: "WHEN_REQUIRED",
+    responseChecksumValidation: "WHEN_REQUIRED",
 });
 
 const templateLayout = (content: string): string => `
