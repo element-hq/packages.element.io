@@ -43,7 +43,7 @@ jobs:
               if: startsWith(env.INCOMING_FILE, 'https://') == false
               run: |
                   mkdir dist
-                  aws s3 cp "s3://$R2_INCOMING_BUCKET/$INCOMING_FILE" dist/ --endpoint-url $R2_URL --region auto --checksum-algorithm CRC32
+                  aws s3 cp "s3://$R2_INCOMING_BUCKET/$INCOMING_FILE" dist/ --endpoint-url $R2_URL --region auto
               env:
                   AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
@@ -66,7 +66,7 @@ jobs:
               run: sudo apt-get install -y reprepro
 
             - name: Fetch database
-              run: aws s3 cp --recursive "s3://$R2_DB_BUCKET" debian/db/ --endpoint-url "$R2_URL" --region auto --checksum-algorithm CRC32
+              run: aws s3 cp --recursive "s3://$R2_DB_BUCKET" debian/db/ --endpoint-url "$R2_URL" --region auto
               env:
                   AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
@@ -132,7 +132,7 @@ jobs:
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
 
             - name: Cleanup incoming
-              run: aws s3 rm "s3://$R2_INCOMING_BUCKET/$INCOMING_FILE" --endpoint-url "$R2_URL" --region auto --checksum-algorithm CRC32
+              run: aws s3 rm "s3://$R2_INCOMING_BUCKET/$INCOMING_FILE" --endpoint-url "$R2_URL" --region auto
               env:
                   AWS_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_TOKEN }}
