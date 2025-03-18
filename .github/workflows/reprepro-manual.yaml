@@ -10,7 +10,7 @@ on:
                 description: Whether to deploy changes back
                 required: false
                 type: boolean
-                default: true
+                default: false
 # Protect reprepro database using concurrency
 concurrency: reprepro
 jobs:
@@ -32,10 +32,11 @@ jobs:
                   passphrase: ${{ secrets.GPG_PASSPHRASE }}
                   fingerprint: ${{ vars.GPG_FINGERPRINT }}
 
-            - name: Print GPG key
+            - name: Load updated GPG public key
               env:
                   FINGERPRINT: ${{ vars.GPG_FINGERPRINT }}
               run: |
+                  gpg --import packages.element.io/debian/element-io-archive-keyring.gpg
                   gpg --list-keys --list-options show-unusable-subkeys=yes --with-subkey-fingerprint $FINGERPRINT
 
             - name: Install reprepro
