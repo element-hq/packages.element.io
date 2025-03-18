@@ -62,6 +62,13 @@ jobs:
                   passphrase: ${{ secrets.GPG_PASSPHRASE }}
                   fingerprint: ${{ vars.GPG_FINGERPRINT }}
 
+            - name: Load updated GPG public key
+              env:
+                  FINGERPRINT: ${{ vars.GPG_FINGERPRINT }}
+              run: |
+                  gpg --import packages.element.io/debian/element-io-archive-keyring.gpg
+                  gpg --list-keys --list-options show-unusable-subkeys=yes --with-subkey-fingerprint $FINGERPRINT
+
             - name: Install reprepro
               run: sudo apt-get install -y reprepro
 
