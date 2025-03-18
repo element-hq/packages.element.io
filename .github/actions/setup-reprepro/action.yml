@@ -1,5 +1,5 @@
-name: Setup Reprepro, load GPG key, and fetch database
-description: Generates signature for release tarball and uploads it as a release asset
+name: Setup reprepro
+description: Install reprepro, load GPG key, and fetch reprepro database
 inputs:
     gpg-fingerprint:
         description: Fingerprint of the GPG key to load.
