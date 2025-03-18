@@ -1,0 +1,37 @@
+name: Push reprepro
+description: Push debian repository to bucket, push reprepro database to db bucket
+inputs:
+    s3-endpoint-url:
+        description: API URL to the S3 instance.
+        required: true
+    s3-bucket:
+        description: Name of the S3 bucket to deploy the repository to.
+        required: true
+    s3-db-bucket:
+        description: Name of the S3 bucket to push the database to.
+        required: true
+    s3-access-key-id:
+        description: Access key ID for the S3 bucket.
+        required: true
+    s3-secret-access-key:
+        description: Secret access key for the S3 bucket.
+        required: true
+
+runs:
+    using: composite
+    steps:
+        - name: Deploy debian repo
+          run: aws s3 cp --recursive packages.element.io/debian/ "s3://$BUCKET/debian" --endpoint-url "$R2_URL" --region auto --checksum-algorithm CRC32
+          env:
+              R2_URL: ${{ inputs.s3-endpoint-url }}
+              BUCKET: ${{ inputs.s3-bucket }}
+              AWS_ACCESS_KEY_ID: ${{ inputs.s3-access-key-id }}
+              AWS_SECRET_ACCESS_KEY: ${{ inputs.s3-secret-access-key }}
+
+        - name: Store database
+          run: aws s3 cp --recursive debian/db/ "s3://$BUCKET" --endpoint-url "$R2_URL" --region auto --checksum-algorithm CRC32
+          env:
+              R2_URL: ${{ inputs.s3-endpoint-url }}
+              BUCKET: ${{ inputs.s3-db-bucket }}
+              AWS_ACCESS_KEY_ID: ${{ inputs.s3-access-key-id }}
+              AWS_SECRET_ACCESS_KEY: ${{ inputs.s3-secret-access-key }}
