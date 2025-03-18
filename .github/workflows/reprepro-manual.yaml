@@ -32,6 +32,12 @@ jobs:
                   passphrase: ${{ secrets.GPG_PASSPHRASE }}
                   fingerprint: ${{ vars.GPG_FINGERPRINT }}
 
+            - name: Print GPG key
+              env:
+                  FINGERPRINT: ${{ vars.GPG_FINGERPRINT }}
+              run: |
+                  gpg --list-keys --with-subkey-fingerprint $FINGERPRINT
+
             - name: Install reprepro
               run: sudo apt-get install -y reprepro
 
