@@ -34,11 +34,8 @@ runs:
               PASSPHRASE: ${{ inputs.gpg-passphrase }}
               FINGERPRINT: ${{ inputs.gpg-fingerprint }}
           run: |
-              # Import the private key from the GH secrets
               echo "$PRIVATE_KEY" | gpg --import --batch --passphrase "$PASSPHRASE" -
-              # Import the published public keys from the repo, to get up-to-date signatures (and expiry dates)
               gpg --import packages.element.io/debian/element-io-archive-keyring.gpg
-              # For debugging, show the contents of the keyring
               gpg --list-keys --list-options show-unusable-subkeys=yes --with-subkey-fingerprint $FINGERPRINT
 
         - name: Install reprepro
