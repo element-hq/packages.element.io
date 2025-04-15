@@ -37,6 +37,7 @@ jobs:
             R2_URL: ${{ vars.CF_R2_S3_API }}
             INCOMING_FILE: ${{ inputs.incoming || github.event.client_payload.incoming }}
         steps:
+            - uses: actions/checkout@v3
             - name: Prepare reprepro
               uses: ./.github/actions/setup-reprepro
               with:
