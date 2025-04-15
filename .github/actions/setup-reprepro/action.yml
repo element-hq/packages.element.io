@@ -1,0 +1,53 @@
+name: Setup reprepro
+description: Install reprepro, load GPG key, and fetch reprepro database
+inputs:
+    gpg-fingerprint:
+        description: Fingerprint of the GPG key to load.
+        required: true
+    gpg-private-key:
+        description: ASCII Armor of the GPG private key to load.
+        required: true
+    gpg-passphrase:
+        description: Passphrase of the GPG private key.
+        required: true
+    s3-endpoint-url:
+        description: API URL to the S3 instance.
+        required: true
+    s3-db-bucket:
+        description: Name of the S3 bucket to fetch the database from.
+        required: true
+    s3-access-key-id:
+        description: Access key ID for the S3 bucket.
+        required: true
+    s3-secret-access-key:
+        description: Secret access key for the S3 bucket.
+        required: true
+
+runs:
+    using: composite
+    steps:
+        - uses: actions/checkout@v3
+
+        - name: Load GPG key
+          env:
+              PRIVATE_KEY: ${{ inputs.gpg-private-key }}
+              PASSPHRASE: ${{ inputs.gpg-passphrase }}
+              FINGERPRINT: ${{ inputs.gpg-fingerprint }}
+          run: |
+              # Import the private key from the GH secrets
+              echo "$PRIVATE_KEY" | gpg --import --batch --passphrase "$PASSPHRASE" -
+              # Import the published public keys from the repo, to get up-to-date signatures (and expiry dates)
+              gpg --import packages.element.io/debian/element-io-archive-keyring.gpg
+              # For debugging, show the contents of the keyring
+              gpg --list-keys --list-options show-unusable-subkeys=yes --with-subkey-fingerprint $FINGERPRINT
+
+        - name: Install reprepro
+          run: sudo apt-get install -y reprepro
+
+        - name: Fetch database
+          run: aws s3 cp --recursive "s3://$BUCKET" debian/db/ --endpoint-url "$R2_URL" --region auto
+          env:
+              R2_URL: ${{ inputs.s3-endpoint-url }}
+              BUCKET: ${{ inputs.s3-db-bucket }}
+              AWS_ACCESS_KEY_ID: ${{ inputs.s3-access-key-id }}
+              AWS_SECRET_ACCESS_KEY: ${{ inputs.s3-secret-access-key }}
