@@ -21,7 +21,6 @@ runs:
     using: composite
     steps:
         - name: Deploy debian repo
-          shell: bash
           run: aws s3 cp --recursive packages.element.io/debian/ "s3://$BUCKET/debian" --endpoint-url "$R2_URL" --region auto --checksum-algorithm CRC32
           env:
               R2_URL: ${{ inputs.s3-endpoint-url }}
@@ -30,7 +29,6 @@ runs:
               AWS_SECRET_ACCESS_KEY: ${{ inputs.s3-secret-access-key }}
 
         - name: Store database
-          shell: bash
           run: aws s3 cp --recursive debian/db/ "s3://$BUCKET" --endpoint-url "$R2_URL" --region auto --checksum-algorithm CRC32
           env:
               R2_URL: ${{ inputs.s3-endpoint-url }}
