@@ -64,7 +64,7 @@ const templateLayout = (content: string): string => `
 
         <div id="raw_include_README_md"></div>
         <footer>
-            <p>© 2022 New Vector Ltd.</p>
+            <p>© New Vector Ltd.</p>
             <p><a href="https://element.io/privacy">Privacy</a></p>
             <p><a href="https://element.io/legal">Legal</a></p>
         </footer>
