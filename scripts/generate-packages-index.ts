@@ -10,6 +10,7 @@ const HIDDEN_FILES = [
     "/fonts/",
     "/tools/",
     "/nginx-theme/",
+    "/sign-cache/",
     ".~tmp~/",
     "msi/",
 ];
